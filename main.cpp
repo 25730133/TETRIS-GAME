@@ -65,129 +65,65 @@ char blocks[7][4][4] = {
     }
 };
 
-void initBoard() {
-    for (int i = 0; i < H; i++)
-        for (int j = 0; j < W; j++)
-            if (i == 0 || i == H - 1 || j == 0 || j == W - 1)
-                board[i][j] = '#';
-            else
-                board[i][j] = ' ';
-}
-
-void draw() {
-    system("cls");
-    for (int i = 0; i < H; i++) {
-        for (int j = 0; j < W; j++)
-            cout << board[i][j];
-        cout << endl;
-    }
-}
-
-bool canMove(int dx, int dy) {
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
+bool canMove(int dx, int dy){
+    for (int i = 0; i < 4; i++ )
+        for (int j = 0; j < 4; j++ )
             if (blocks[b][i][j] != ' ') {
                 int xt = x + j + dx;
                 int yt = y + i + dy;
-
-                if (xt <= 0 || xt >= W - 1 || yt >= H - 1)
-                    return false;
-
-                if (board[yt][xt] != ' ')
-                    return false;
+                if (xt < 1 || xt >= W-1 || yt >= H-1 ) return false;
+                if (board[yt][xt] != ' ') return false;
             }
     return true;
 }
-
-void placeBlock() {
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
+void block2Board(){
+    for (int i = 0; i < 4; i++ )
+        for (int j = 0; j < 4; j++ )
             if (blocks[b][i][j] != ' ')
-                board[y + i][x + j] = blocks[b][i][j];
+                board[y+i][x+j] = blocks[b][i][j];
 }
-
-void clearBlock() {
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
+void boardDelBlock(){
+    for (int i = 0; i < 4; i++ )
+        for (int j = 0; j < 4; j++ )
             if (blocks[b][i][j] != ' ')
-                board[y + i][x + j] = ' ';
+                board[y+i][x+j] = ' ';
+}
+void initBoard(){
+    for (int i = 0 ; i < H ; i++)
+        for (int j = 0 ; j < W ; j++)
+            if (i == 0 || i == H-1 || j ==0 || j == W-1) board[i][j] = '#';
+            else board[i][j] = ' ';
+}
+void draw(){
+    system("cls");
+
+    for (int i = 0 ; i < H ; i++, cout<<endl)
+        for (int j = 0 ; j < W ; j++) cout<<board[i][j];
 }
 
-// Rotate 90 degree
-void rotateBlock() {
-    char temp[4][4];
-
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            temp[j][3 - i] = blocks[b][i][j];
-
-    // check valid rotation
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            if (temp[i][j] != ' ') {
-                int xt = x + j;
-                int yt = y + i;
-
-                if (xt <= 0 || xt >= W - 1 || yt >= H - 1)
-                    return;
-
-                if (board[yt][xt] != ' ')
-                    return;
-            }
-
-    // apply rotation
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            blocks[b][i][j] = temp[i][j];
-}
-
-int main() {
+int main()
+{
     srand(time(0));
-
+    x = 5; y = 0; b = rand()%7;
     initBoard();
-
-    x = 5;
-    y = 0;
-    b = rand() % 7;
-
-    while (true) {
-        clearBlock();
-
-        // input
-        if (kbhit()) {
+    while (1){
+        boardDelBlock();
+        if (kbhit()){
             char c = getch();
-
-            if (c == 'a' && canMove(-1, 0)) x--;
-            if (c == 'd' && canMove(1, 0)) x++;
-            if (c == 's' && canMove(0, 1)) y++;
-            if (c == 'w') rotateBlock();
+            if (c == 'a' && canMove(-1,0)) x--;
+            if (c == 'd' && canMove( 1,0)) x++;
+            if (c == 'x' && canMove( 0,1)) y++;
             if (c == 'q') break;
         }
-
-        // auto fall
-        if (canMove(0, 1)) {
-            y++;
-        } else {
-            placeBlock();
-
-            // new block
-            x = 5;
-            y = 0;
-            b = rand() % 7;
-
-            // game over check
-            if (!canMove(0, 0)) {
-                draw();
-                cout << "\nGAME OVER\n";
-                break;
-            }
+        if (canMove(0,1)) y++;
+        else{
+            block2Board();
+            
+            x = 5; y = 0; b = rand()%7;
         }
-
-        placeBlock();
+        block2Board();
         draw();
-
-        Sleep(300);
+        _sleep(500);
     }
-
     return 0;
 }

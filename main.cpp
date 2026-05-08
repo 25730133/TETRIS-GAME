@@ -12,6 +12,10 @@ char board[H][W];
 
 int x, y, b;
 
+const int minFallSpeed = 100;
+const int speedUpStep = 10;
+int fallSpeed = 500;
+
 // 7 tetrominoes
 char blocks[7][4][4] = {
     // I
@@ -100,7 +104,13 @@ void draw(){
     for (int i = 0 ; i < H ; i++, cout<<endl)
         for (int j = 0 ; j < W ; j++) cout<<board[i][j];
 }
-
+// TODO: Xóa hàm tạm này khi hàm removeLine thật được merge vào main
+void removeLine(){};
+void updateSpeed(){
+    if(fallSpeed > minFallSpeed){
+        fallSpeed -= speedUpStep;
+    }
+}
 int main()
 {
     srand(time(0));
@@ -118,12 +128,13 @@ int main()
         if (canMove(0,1)) y++;
         else{
             block2Board();
-            
+            removeLine();
+            updateSpeed();
             x = 5; y = 0; b = rand()%7;
         }
         block2Board();
         draw();
-        _sleep(500);
+        _sleep(fallSpeed);
     }
     return 0;
 }

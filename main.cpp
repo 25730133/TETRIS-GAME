@@ -208,12 +208,8 @@ bool canMove(int dx, int dy)
             {
                 int xt = x + j + dx;
                 int yt = y + i + dy;
-
-                if (xt <= 0 || xt >= W - 1 || yt >= H - 1)
-                    return false;
-
-                if (board[yt][xt] != ' ')
-                    return false;
+                if (xt < 1 || xt >= W-1 || yt >= H-1 ) return false;
+                if (board[yt][xt] != ' ') return false;
             }
     return true;
 }
@@ -223,7 +219,7 @@ void placeBlock()
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
             if (blocks[b][i][j] != ' ')
-                board[y + i][x + j] = blocks[b][i][j];
+                board[y+i][x+j] = blocks[b][i][j];
 }
 
 void clearBlock()
@@ -231,8 +227,16 @@ void clearBlock()
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
             if (blocks[b][i][j] != ' ')
-                board[y + i][x + j] = ' ';
+                board[y+i][x+j] = ' ';
 }
+void initBoard(){
+    for (int i = 0 ; i < H ; i++)
+        for (int j = 0 ; j < W ; j++)
+            if (i == 0 || i == H-1 || j ==0 || j == W-1) board[i][j] = '#';
+            else board[i][j] = ' ';
+}
+void draw(){
+    system("cls");
 
 // Rotate 90 degree
 void rotateBlock()
@@ -267,7 +271,7 @@ void rotateBlock()
 int main()
 {
     srand(time(0));
-
+    x = 5; y = 0; b = rand()%7;
     initBoard();
 
     x = 5;
@@ -282,11 +286,9 @@ int main()
         if (kbhit())
         {
             char c = getch();
-
-            if (c == 'a' && canMove(-1, 0)) x--;
-            if (c == 'd' && canMove(1, 0)) x++;
-            if (c == 's' && canMove(0, 1)) y++;
-            if (c == 'w') rotateBlock();
+            if (c == 'a' && canMove(-1,0)) x--;
+            if (c == 'd' && canMove( 1,0)) x++;
+            if (c == 'x' && canMove( 0,1)) y++;
             if (c == 'q') break;
         }
 
@@ -312,12 +314,9 @@ int main()
                 break;
             }
         }
-
-        placeBlock();
+        block2Board();
         draw();
-
-        Sleep(300);
+        _sleep(500);
     }
-
     return 0;
 }

@@ -1,47 +1,60 @@
 # Tetris Game
 
-## 1. Project Overview
+## 1. Tổng quan dự án
 
-This project is a console-based version of the classic Tetris game. The game allows players to control falling geometric blocks called Tetriminoes and arrange them inside a two-dimensional board. The main objective is to complete horizontal lines, clear them from the board, and continue playing until there is no space left for new blocks.
+Dự án này là phiên bản console của trò chơi Tetris cổ điển. Người chơi sẽ điều khiển các khối hình học Tetrimino rơi xuống trong một bảng hai chiều và sắp xếp chúng để tạo thành các hàng ngang hoàn chỉnh. Khi một hàng được lấp đầy, hàng đó sẽ bị xóa khỏi bảng và người chơi tiếp tục cho đến khi không còn chỗ để tạo khối mới.
 
-The project focuses on basic game development concepts, including matrix-based data processing, real-time keyboard input, collision detection, block movement, line clearing, and game state updates. Although the game uses a simple console interface, it still demonstrates the core logic of an interactive real-time game system.
+Dự án tập trung vào các kiến thức cơ bản trong phát triển game như xử lý ma trận hai chiều, điều khiển thời gian thực bằng bàn phím, kiểm tra va chạm, di chuyển và xoay khối, xóa dòng hoàn chỉnh và cập nhật trạng thái trò chơi liên tục.
 
-Main features:
+Mặc dù trò chơi được xây dựng trên giao diện console đơn giản, dự án vẫn thể hiện đầy đủ logic cốt lõi của một hệ thống game tương tác thời gian thực.
 
-- Generate random Tetrimino blocks
-- Move blocks left, right, and downward
-- Rotate falling blocks
-- Detect collisions with borders and fixed blocks
-- Clear completed horizontal lines
-- Update the game board continuously
-- End the game when no space is available for a new block
+## 2. Chức năng chính
 
-## 2. Gameplay and Controls
+- Tạo ngẫu nhiên các khối Tetrimino
+- Di chuyển khối sang trái, phải và xuống dưới
+- Xoay khối khi đang rơi
+- Kiểm tra va chạm với biên và các khối cố định
+- Xóa các dòng hoàn chỉnh
+- Cập nhật bảng trò chơi liên tục
+- Kết thúc trò chơi khi không còn chỗ cho khối mới
 
-The game follows the basic rules of Tetris. A block appears at the top of the board and falls automatically over time. The player can move or rotate the block before it reaches the bottom or touches another fixed block. Once the block can no longer move downward, it becomes part of the board.
+## 3. Gameplay và điều khiển
 
-If a horizontal row is completely filled, the row is removed, and the rows above it move downward. The game continues by generating new blocks until the board becomes full.
+Trò chơi hoạt động theo nguyên tắc cơ bản của Tetris. Một khối sẽ xuất hiện ở phía trên bảng và tự động rơi xuống theo thời gian. Người chơi có thể di chuyển hoặc xoay khối trước khi nó chạm đáy hoặc va vào khối khác.
 
-Controls:
+Khi khối không thể tiếp tục rơi xuống, nó sẽ được cố định vào bảng. Nếu một hàng ngang được lấp đầy hoàn toàn, hàng đó sẽ bị xóa và các hàng phía trên sẽ dịch xuống.
 
-| Key | Function |
+Trò chơi tiếp tục tạo khối mới cho đến khi bảng đầy.
+
+### Điều khiển
+
+| Phím | Chức năng |
 |---|---|
-| `A` / `a` | Move the block to the left |
-| `D` / `d` | Move the block to the right |
-| `W` / `w` | Rotate the block |
-| `S` / `s` | Increase the falling speed |
-| `X` / `x` | Move the block downward |
-| `Q` / `q` | Quit the game |
+| A / a | Di chuyển sang trái |
+| D / d | Di chuyển sang phải |
+| W / w | Xoay khối |
+| S / s | Tăng tốc độ rơi |
+| X / x | Di chuyển xuống |
+| Q / q | Thoát trò chơi |
 
-Basic gameplay flow:
+## 4. Quy trình hoạt động cơ bản
 
-```text
-Start game
-Generate a new block
-Receive player input
-Check collision
-Update block position
-Fix the block when it cannot move down
-Clear completed lines
-Generate the next block
-Repeat until game over
+1. Khởi động trò chơi
+2. Tạo khối mới
+3. Nhận thao tác từ người chơi
+4. Kiểm tra va chạm
+5. Cập nhật vị trí khối
+6. Cố định khối khi không thể rơi tiếp
+7. Xóa các dòng hoàn chỉnh
+8. Tạo khối tiếp theo
+9. Lặp lại cho đến khi Game Over
+
+## 5. Thành viên nhóm và phân công nhiệm vụ
+
+| STT | Thành viên | MSSV | Vai trò | Nhiệm vụ trọng tâm |
+|---|---|---|---|---|
+| 1 | Lê Công Phú | 25730133 | SV1 | Trưởng nhóm kỹ thuật: xây dựng code nền, thiết lập Git, khởi tạo board. |
+| 2 | Hoàng Minh Anh | 25730096 | SV2 | Phụ trách xử lý dữ liệu trò chơi và báo cáo: xử lý chức năng `removeLine`, cập nhật ma trận; xây dựng nội dung và biên soạn các report. |
+| 3 | Nguyễn Thị Xuân Tiên | 25730152 | SV3 | Phụ trách giao diện người dùng và LaTeX: cải tiến giao diện, chỉnh sửa viền và khối vuông; code và định dạng tài liệu bằng LaTeX. |
+| 4 | Đỗ Cao Quỳnh Lan | 25730121 | SV4 | Phụ trách logic xoay khối: xử lý xoay khối và kiểm tra va chạm. |
+| 5 | Lê Anh Tuấn | 25730158 | SV5 | Phụ trách tốc độ rơi và kiểm thử: xây dựng cơ chế tăng tốc sau mỗi lần xóa dòng, hỗ trợ kiểm thử chương trình. |

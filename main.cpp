@@ -100,6 +100,33 @@ void draw(){
     for (int i = 0 ; i < H ; i++, cout<<endl)
         for (int j = 0 ; j < W ; j++) cout<<board[i][j];
 }
+void rotateBlock() {
+    char temp[4][4];
+
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            temp[j][3 - i] = blocks[b][i][j];
+
+    // check valid rotation
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            if (temp[i][j] != ' ') {
+                int xt = x + j;
+                int yt = y + i;
+
+                if (xt <= 0 || xt >= W - 1 || yt >= H - 1)
+                    return;
+
+                if (board[yt][xt] != ' ')
+                    return;
+            }
+
+    // apply rotation
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            blocks[b][i][j] = temp[i][j];
+        }
+    
 
 int main()
 {
@@ -113,8 +140,10 @@ int main()
             if (c == 'a' && canMove(-1,0)) x--;
             if (c == 'd' && canMove( 1,0)) x++;
             if (c == 'x' && canMove( 0,1)) y++;
+            if (c == 'w') rotateBlock();
             if (c == 'q') break;
         }
+        
         if (canMove(0,1)) y++;
         else{
             block2Board();

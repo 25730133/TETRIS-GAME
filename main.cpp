@@ -242,40 +242,22 @@ void initBoard(){
 void draw(){
     system("cls");
 
-// Rotate 90 degree
-void rotateBlock()
-{
-    char temp[4][4];
-
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            temp[j][3 - i] = blocks[b][i][j];
-
-    // check valid rotation
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            if (temp[i][j] != ' ')
-            {
-                int xt = x + j;
-                int yt = y + i;
-
-                if (xt <= 0 || xt >= W - 1 || yt >= H - 1)
-                    return;
-
-                if (board[yt][xt] != ' ')
-                    return;
-            }
-
-    // apply rotation
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            blocks[b][i][j] = temp[i][j];
+    for (int i = 0 ; i < H ; i++, cout<<endl)
+        for (int j = 0 ; j < W ; j++) cout<<board[i][j];
 }
-// TODO: Xóa hàm tạm này khi hàm removeLine thật được merge vào main
-void removeLine(){};
-void updateSpeed(){
-    if(fallSpeed > minFallSpeed){
-        fallSpeed -= speedUpStep;
+void removeLine(){
+    int i,j;
+    for (i = H-2 ; i > 0 ; i-- ){
+        for (j = 0 ; j < W ; j++)
+            if (board[i][j] == ' ') break;
+        if (j == W){
+            for (int ii = i ; ii > 0 ; ii--)
+                for (int jj = 0; jj < W; jj++)
+                    board[ii][jj] = board[ii-1][jj];
+            i++;
+            draw();
+            _sleep(200);
+        }
     }
 }
 int main()

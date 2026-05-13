@@ -65,6 +65,7 @@ char blocks[7][4][4] =
         {' ',' ',' ',' '}
     }
 };
+
 void initBoard()
 {
     for (int i = 0; i < H; i++)
@@ -130,12 +131,55 @@ void drawMainBoard()
     }
 }
 
+void drawNextBlock()
+{
+    int nextX = 35;
+    int nextY = 3;
 
+    setColor(15);
+
+    // khung
+    for (int i = 0; i < 10; i++)
+    {
+        COORD pos = {(SHORT)nextX, (SHORT)(nextY+i)};
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+
+        if (i == 0 || i == 9)
+            cout << "############";
+        else
+            cout << "#          #";
+    }
+
+    // block preview
+    for (int i = 0; i < 4; i++)
+    {
+        COORD pos = {(SHORT)(nextX+2), (SHORT)(nextY+2+i)};
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+
+        for (int j = 0; j < 4; j++)
+        {
+            char c = blocks[b][i][j];
+
+            if (c == ' ')
+                cout << "  ";
+            else
+            {
+                setColor(getColor(c));
+                cout << "[]";
+                setColor(15);
+            }
+        }
+    }
+}
 void draw()
 {
     system("cls");
 
     drawMainBoard();
+
+    drawNextBlock();
+
+    //drawHold();
 
     setColor(15);
 

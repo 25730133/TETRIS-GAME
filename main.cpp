@@ -12,6 +12,8 @@ char board[H][W];
 
 int x, y, b;
 
+char currentBlock[4][4];
+
 const int minFallSpeed = 100;
 const int speedUpStep = 10;
 int fallSpeed = 500;
@@ -26,6 +28,7 @@ char blocks[7][4][4] =
         {' ',' ',' ',' '},
         {' ',' ',' ',' '}
     },
+
     // O
     {
         {' ',' ',' ',' '},
@@ -33,6 +36,7 @@ char blocks[7][4][4] =
         {' ','O','O',' '},
         {' ',' ',' ',' '}
     },
+
     // T
     {
         {' ',' ',' ',' '},
@@ -40,6 +44,7 @@ char blocks[7][4][4] =
         {'T','T','T',' '},
         {' ',' ',' ',' '}
     },
+
     // S
     {
         {' ',' ',' ',' '},
@@ -47,6 +52,7 @@ char blocks[7][4][4] =
         {'S','S',' ',' '},
         {' ',' ',' ',' '}
     },
+
     // Z
     {
         {' ',' ',' ',' '},
@@ -54,6 +60,7 @@ char blocks[7][4][4] =
         {' ','Z','Z',' '},
         {' ',' ',' ',' '}
     },
+
     // J
     {
         {' ',' ',' ',' '},
@@ -61,6 +68,7 @@ char blocks[7][4][4] =
         {'J','J','J',' '},
         {' ',' ',' ',' '}
     },
+
     // L
     {
         {' ',' ',' ',' '},
@@ -70,14 +78,34 @@ char blocks[7][4][4] =
     }
 };
 
+void copyBlock(char dest[4][4], char src[4][4])
+{
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            dest[i][j] = src[i][j];
+        }
+    }
+}
+
 void initBoard()
 {
     for (int i = 0; i < H; i++)
+    {
         for (int j = 0; j < W; j++)
-            if (i == 0 || i == H - 1 || j == 0 || j == W - 1)
+        {
+            if (i == 0 || i == H - 1 ||
+                j == 0 || j == W - 1)
+            {
                 board[i][j] = '#';
+            }
             else
+            {
                 board[i][j] = ' ';
+            }
+        }
+    }
 }
 
 // ====================== COLOR ======================
@@ -89,18 +117,27 @@ void setColor(int color)
 
 int getColor(char c)
 {
-    if (c == 'I') return 11; // cyan
-    if (c == 'O') return 14; // yellow
-    if (c == 'T') return 13; // purple
-    if (c == 'S') return 10; // green
-    if (c == 'Z') return 12; // red
-    if (c == 'J') return 9;  // blue
-    if (c == 'L') return 6;  // orange
+    if (c == 'I') return 11;
+    if (c == 'O') return 14;
+    if (c == 'T') return 13;
+    if (c == 'S') return 10;
+    if (c == 'Z') return 12;
+    if (c == 'J') return 9;
+    if (c == 'L') return 6;
 
     return 7;
 }
 
-// ====================== LOGIC ======================
+// ====================== SPEED ======================
+
+void updateSpeed()
+{
+    if (fallSpeed > minFallSpeed)
+    {
+        fallSpeed -= speedUpStep;
+    }
+}
+
 // ====================== DRAW ======================
 
 void drawCell(char c)
@@ -122,6 +159,7 @@ void drawCell(char c)
 
     setColor(7);
 }
+
 void drawMainBoard()
 {
     for (int i = 0; i < H; i++)
@@ -142,10 +180,9 @@ void drawNextBlock()
 
     setColor(15);
 
-    // khung
     for (int i = 0; i < 10; i++)
     {
-        COORD pos = {(SHORT)nextX, (SHORT)(nextY+i)};
+        COORD pos = {(SHORT)nextX, (SHORT)(nextY + i)};
         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 
         if (i == 0 || i == 9)
@@ -154,10 +191,9 @@ void drawNextBlock()
             cout << "#          #";
     }
 
-    // block preview
     for (int i = 0; i < 4; i++)
     {
-        COORD pos = {(SHORT)(nextX+2), (SHORT)(nextY+2+i)};
+        COORD pos = {(SHORT)(nextX + 2), (SHORT)(nextY + 2 + i)};
         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 
         for (int j = 0; j < 4; j++)
@@ -165,7 +201,9 @@ void drawNextBlock()
             char c = blocks[b][i][j];
 
             if (c == ' ')
+            {
                 cout << "  ";
+            }
             else
             {
                 setColor(getColor(c));
@@ -175,19 +213,19 @@ void drawNextBlock()
         }
     }
 }
+
 void draw()
 {
-    system("cls");
+    COORD pos = {0, 0};
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 
     drawMainBoard();
 
     drawNextBlock();
 
-    //drawHold();
-
     setColor(15);
 
-    COORD pos = {35, 15};
+    pos = {35, 15};
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
     cout << "A : LEFT";
 
@@ -201,145 +239,253 @@ void draw()
 
     pos = {35, 18};
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+    cout << "W : ROTATE";
+
+    pos = {35, 19};
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
     cout << "Q : QUIT";
 }
 
-bool canMove(int dx, int dy)
-{
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            if (blocks[b][i][j] != ' ')
-            {
-                int xt = x + j + dx;
-                int yt = y + i + dy;
-                if (xt < 1 || xt >= W-1 || yt >= H-1 ) return false;
-                if (board[yt][xt] != ' ') return false;
-            }
-    return true;
-}
+// ====================== LOGIC ======================
 
 void placeBlock()
 {
     for (int i = 0; i < 4; i++)
+    {
         for (int j = 0; j < 4; j++)
-            if (blocks[b][i][j] != ' ')
-                board[y+i][x+j] = blocks[b][i][j];
+        {
+            if (currentBlock[i][j] != ' ')
+            {
+                board[y + i][x + j] = currentBlock[i][j];
+            }
+        }
+    }
 }
 
 void clearBlock()
 {
     for (int i = 0; i < 4; i++)
+    {
         for (int j = 0; j < 4; j++)
-            if (blocks[b][i][j] != ' ')
-                board[y+i][x+j] = ' ';
-}
-void initBoard(){
-    for (int i = 0 ; i < H ; i++)
-        for (int j = 0 ; j < W ; j++)
-            if (i == 0 || i == H-1 || j ==0 || j == W-1) board[i][j] = '#';
-            else board[i][j] = ' ';
-}
-void draw(){
-    system("cls");
-
-    for (int i = 0 ; i < H ; i++, cout<<endl)
-        for (int j = 0 ; j < W ; j++) cout<<board[i][j];
-}
-void rotateBlock() {
-    char temp[4][4];
-
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            temp[j][3 - i] = blocks[b][i][j];
-
-    // check valid rotation
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            if (temp[i][j] != ' ') {
-                int xt = x + j;
-                int yt = y + i;
-
-                if (xt <= 0 || xt >= W - 1 || yt >= H - 1)
-                    return;
-
-                if (board[yt][xt] != ' ')
-                    return;
+        {
+            if (currentBlock[i][j] != ' ')
+            {
+                board[y + i][x + j] = ' ';
             }
-
-    // apply rotation
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            blocks[b][i][j] = temp[i][j];
-        }
-    
-
-void removeLine(){
-    int i,j;
-    for (i = H-2 ; i > 0 ; i-- ){
-        for (j = 0 ; j < W ; j++)
-            if (board[i][j] == ' ') break;
-        if (j == W){
-            for (int ii = i ; ii > 0 ; ii--)
-                for (int jj = 0; jj < W; jj++)
-                    board[ii][jj] = board[ii-1][jj];
-            i++;
-            draw();
-            _sleep(200);
         }
     }
 }
+
+bool canMove(int dx, int dy)
+{
+    clearBlock();
+
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            if (currentBlock[i][j] != ' ')
+            {
+                int xt = x + j + dx;
+                int yt = y + i + dy;
+
+                if (xt < 1 || xt >= W - 1 ||
+                    yt < 1 || yt >= H - 1)
+                {
+                    placeBlock();
+                    return false;
+                }
+
+                if (board[yt][xt] != ' ')
+                {
+                    placeBlock();
+                    return false;
+                }
+            }
+        }
+    }
+
+    placeBlock();
+
+    return true;
+}
+
+void rotateBlock()
+{
+    char temp[4][4];
+
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            temp[j][3 - i] = currentBlock[i][j];
+        }
+    }
+
+    clearBlock();
+
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            if (temp[i][j] != ' ')
+            {
+                int xt = x + j;
+                int yt = y + i;
+
+                if (xt < 1 || xt >= W - 1 ||
+                    yt < 1 || yt >= H - 1)
+                {
+                    placeBlock();
+                    return;
+                }
+
+                if (board[yt][xt] != ' ')
+                {
+                    placeBlock();
+                    return;
+                }
+            }
+        }
+    }
+
+    copyBlock(currentBlock, temp);
+
+    placeBlock();
+}
+
+void removeLine()
+{
+    for (int i = H - 2; i > 0; i--)
+    {
+        bool full = true;
+
+        for (int j = 1; j < W - 1; j++)
+        {
+            if (board[i][j] == ' ')
+            {
+                full = false;
+                break;
+            }
+        }
+
+        if (full)
+        {
+            for (int ii = i; ii > 1; ii--)
+            {
+                for (int jj = 1; jj < W - 1; jj++)
+                {
+                    board[ii][jj] = board[ii - 1][jj];
+                }
+            }
+
+            for (int jj = 1; jj < W - 1; jj++)
+            {
+                board[1][jj] = ' ';
+            }
+
+            updateSpeed();
+
+            draw();
+
+            Sleep(200);
+
+            i++;
+        }
+    }
+}
+
+// ====================== MAIN ======================
+
 int main()
 {
     srand(time(0));
-    x = 5; y = 0; b = rand()%7;
-    initBoard();
 
     x = 5;
-    y = 0;
+    y = 1;
     b = rand() % 7;
+
+    copyBlock(currentBlock, blocks[b]);
+
+    initBoard();
+
+    placeBlock();
 
     while (true)
     {
-        clearBlock();
-
         // input
         if (kbhit())
         {
             char c = getch();
-            if (c == 'a' && canMove(-1,0)) x--;
-            if (c == 'd' && canMove( 1,0)) x++;
-            if (c == 'x' && canMove( 0,1)) y++;
-            if (c == 'w') rotateBlock();
-            if (c == 'q') break;
+
+            if ((c == 'a' || c == 'A') && canMove(-1, 0))
+            {
+                clearBlock();
+                x--;
+                placeBlock();
+            }
+
+            if ((c == 'd' || c == 'D') && canMove(1, 0))
+            {
+                clearBlock();
+                x++;
+                placeBlock();
+            }
+
+            if ((c == 'x' || c == 'X') && canMove(0, 1))
+            {
+                clearBlock();
+                y++;
+                placeBlock();
+            }
+
+            if (c == 'w' || c == 'W')
+            {
+                rotateBlock();
+            }
+
+            if (c == 'q' || c == 'Q')
+            {
+                break;
+            }
         }
 
         // auto fall
         if (canMove(0, 1))
         {
+            clearBlock();
             y++;
+            placeBlock();
         }
         else
         {
-            placeBlock();
             removeLine();
-            updateSpeed();
 
-            // new block
             x = 5;
-            y = 0;
+            y = 1;
             b = rand() % 7;
 
-            // game over check
+            copyBlock(currentBlock, blocks[b]);
+
             if (!canMove(0, 0))
             {
                 draw();
-                cout << "\nGAME OVER\n";
+
+                COORD pos = {0, H + 1};
+                SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+
+                cout << "GAME OVER\n";
+
                 break;
             }
+
+            placeBlock();
         }
-        block2Board();
+
         draw();
-        _sleep(fallSpeed);
+
+        Sleep(fallSpeed);
     }
+
     return 0;
 }

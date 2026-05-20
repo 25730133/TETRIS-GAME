@@ -397,7 +397,10 @@ void removeLine()
 
 class Game
 {
-
+private:
+    int       fallSpeed;
+    int       score;
+    bool      running;
 };
 
 // ====================== MAIN ======================

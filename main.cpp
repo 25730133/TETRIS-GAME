@@ -398,6 +398,12 @@ class Tetromino
 {
 public:
     char shape[4][4];
+    Tetromino()
+    {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                shape[i][j] = ' ';
+    }
 };
 
 // ====================== MAIN ======================

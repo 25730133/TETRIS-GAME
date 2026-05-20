@@ -677,6 +677,21 @@ private:
             current = rotated;
         board.place(current, x, y);
     }
+
+    void lockPiece()
+    {
+        int lines = board.removeLines();
+        if (lines > 0)
+        {
+            score += lines * 100;
+            if (fallSpeed > MIN_FALL_SPEED)
+                fallSpeed -= lines * SPEED_UP_STEP;
+
+            renderer.drawAll(board, next, score);
+            Sleep(200);
+        }
+        spawnPiece();
+    }
 };
 
 // ====================== MAIN ======================

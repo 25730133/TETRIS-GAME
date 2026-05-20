@@ -20,7 +20,7 @@ int fallSpeed = 500;
 
 // 7 tetrominoes
 char blocks[7][4][4] = {};
-const char BLOCK_SHAPES[7][4][4] = 
+const char BLOCK_SHAPES[7][4][4] =
 {
     // I
     {
@@ -400,21 +400,21 @@ class Tetromino
 {
 public:
     char shape[4][4];
-  
+
     Tetromino()
     {
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++)
                 shape[i][j] = ' ';
     }
-  
+
     explicit Tetromino(int type)
     {
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++)
                 shape[i][j] = BLOCK_SHAPES[type][i][j];
     }
-   
+
     Tetromino rotated() const
     {
         Tetromino result;
@@ -473,16 +473,16 @@ public:
             bool full = true;
             for (int j = 1; j < W - 1; j++)
                 if (grid[i][j] == ' ') { full = false; break; }
- 
+
             if (full)
             {
                 for (int ii = i; ii > 1; ii--)
                     for (int jj = 1; jj < W - 1; jj++)
                         grid[ii][jj] = grid[ii - 1][jj];
- 
+
                 for (int jj = 1; jj < W - 1; jj++)
                     grid[1][jj] = ' ';
- 
+
                 cleared++;
                 i++; // re-check this row
             }
@@ -495,6 +495,119 @@ public:
             for (int j = 0; j < 4; j++)
                 if (t.shape[i][j] != ' ')
                     grid[y + i][x + j] = ' ';
+    }
+};
+// ====================== CLASS RENDERER ======================
+
+class Renderer
+{
+public:
+     // Đổi màu chữ trong console
+    static void setColor(int color)
+    {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+    }
+     // Di chuyển con trỏ console
+    static void moveCursor(int x, int y)
+    {
+        COORD pos = { (SHORT)x, (SHORT)y };
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+    }
+    // Trả về mã màu tương ứng với từng khối Tetromino
+    static int getColor(char c)
+    {
+        switch (c)
+        {
+            case 'I': return 11;
+            case 'O': return 14;
+            case 'T': return 13;
+            case 'S': return 10;
+            case 'Z': return 12;
+            case 'J': return 9;
+            case 'L': return 6;
+            default:  return 7;
+        }
+    }
+    // Vẽ một ô của board
+    static void drawCell(char c)
+    {
+        if (c == '#')
+        {
+            setColor(8);
+            cout << "##";
+        }
+        else if (c == ' ')
+        {
+            cout << "  ";
+        }
+        else
+        {
+            setColor(getColor(c));
+            cout << "[]";
+        }
+        setColor(7);
+    }
+    // Vẽ toàn bộ board
+    void drawBoard(const Board& board) const
+    {
+        moveCursor(0, 0);
+        for (int i = 0; i < H; i++)
+        {
+            for (int j = 0; j < W; j++)
+                drawCell(board.grid[i][j]);
+            cout << '\n';
+        }
+    }
+     // Vẽ khối Tetromino tiếp theo (Next Block)
+    void drawNextBlock(const Tetromino& next) const
+    {
+        const int nx = 35, ny = 3;
+        setColor(15);
+
+        for (int i = 0; i < 10; i++)
+        {
+            moveCursor(nx, ny + i);
+            if (i == 0 || i == 9) cout << "############";
+            else                   cout << "#          #";
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            moveCursor(nx + 2, ny + 2 + i);
+            for (int j = 0; j < 4; j++)
+            {
+                char c = next.shape[i][j];
+                if (c == ' ')
+                {
+                    cout << "  ";
+                }
+                else
+                {
+                    setColor(getColor(c));
+                    cout << "[]";
+                    setColor(15);
+                }
+            }
+        }
+    }
+      // Hiển thị điểm số và hướng dẫn điều khiển
+    void drawHUD(int score) const
+    {
+        setColor(15);
+        moveCursor(35, 13); cout << "SCORE: " << score << "      ";
+        moveCursor(35, 15); cout << "A : LEFT  ";
+        moveCursor(35, 16); cout << "D : RIGHT ";
+        moveCursor(35, 17); cout << "X : DOWN  ";
+        moveCursor(35, 18); cout << "W : ROTATE";
+        moveCursor(35, 19); cout << "Q : QUIT  ";
+        setColor(7);
+    }
+     // Vẽ toàn bộ giao diện game
+    void drawAll(const Board& board, const Tetromino& next, int score) const
+    {
+        drawBoard(board);
+        drawNextBlock(next);
+        drawHUD(score);
     }
 };
 // ====================== MAIN ======================

@@ -658,7 +658,13 @@ private:
 
     void tryMove(int dx, int dy)
     {
-
+        board.clear(current, x, y);
+        if (board.canFit(current, x + dx, y + dy))
+        {
+            x += dx;
+            y += dy;
+        }
+        board.place(current, x, y);
     }
 
     void tryRotate()

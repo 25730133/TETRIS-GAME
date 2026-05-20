@@ -404,6 +404,12 @@ public:
     {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
     }
+     // Di chuyển con trỏ console
+    static void moveCursor(int x, int y)
+    {
+        COORD pos = { (SHORT)x, (SHORT)y };
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+    }
 };
 // ====================== MAIN ======================
 

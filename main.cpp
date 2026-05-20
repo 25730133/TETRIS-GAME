@@ -410,6 +410,21 @@ public:
         COORD pos = { (SHORT)x, (SHORT)y };
         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
     }
+    // Trả về mã màu tương ứng với từng khối Tetromino
+    static int getColor(char c)
+    {
+        switch (c)
+        {
+            case 'I': return 11;
+            case 'O': return 14;
+            case 'T': return 13;
+            case 'S': return 10;
+            case 'Z': return 12;
+            case 'J': return 9;
+            case 'L': return 6;
+            default:  return 7;
+        }
+    }
 };
 // ====================== MAIN ======================
 

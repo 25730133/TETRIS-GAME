@@ -399,17 +399,28 @@ class Tetromino
 {
 public:
     char shape[4][4];
+  
     Tetromino()
     {
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++)
                 shape[i][j] = ' ';
     }
+  
     explicit Tetromino(int type)
     {
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++)
                 shape[i][j] = BLOCK_SHAPES[type][i][j];
+    }
+   
+    Tetromino rotated() const
+    {
+        Tetromino result;
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                result.shape[j][3 - i] = shape[i][j];
+        return result;
     }
 };
 

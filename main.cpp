@@ -5,8 +5,10 @@
 
 using namespace std;
 
-#define H 20
-#define W 15
+const int H              = 20;
+const int W              = 15;
+const int MIN_FALL_SPEED = 100;
+const int SPEED_UP_STEP  = 10;
 
 char board[H][W];
 

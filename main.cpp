@@ -398,6 +398,12 @@ void removeLine()
 
 class Renderer
 {
+public:
+     // Đổi màu chữ trong console
+    static void setColor(int color)
+    {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+    }
 };
 // ====================== MAIN ======================
 

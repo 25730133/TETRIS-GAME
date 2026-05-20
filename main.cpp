@@ -402,6 +402,21 @@ private:
     int       score;
     bool      running;
 
+    void handleInput()
+    {
+        if (!kbhit()) return;
+
+        char c = getch();
+        switch (c)
+        {
+            case 'a': case 'A': tryMove(-1, 0); break;
+            case 'd': case 'D': tryMove(1,  0); break;
+            case 'x': case 'X': tryMove(0,  1); break;
+            case 'w': case 'W': tryRotate();    break;
+            case 'q': case 'Q': running = false; break;
+        }
+    }
+
     void tryMove(int dx, int dy)
     {
 

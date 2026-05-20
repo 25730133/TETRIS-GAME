@@ -451,6 +451,20 @@ public:
                 if (t.shape[i][j] != ' ')
                     grid[y + i][x + j] = t.shape[i][j];
     }
+    bool canFit(const Tetromino& t, int x, int y) const
+    {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                if (t.shape[i][j] != ' ')
+                {
+                    int nx = x + j, ny = y + i;
+                    if (nx < 1 || nx >= W - 1 || ny < 1 || ny >= H - 1)
+                        return false;
+                    if (grid[ny][nx] != ' ')
+                        return false;
+                }
+        return true;
+    }
 };
 // ====================== MAIN ======================
 

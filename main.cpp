@@ -401,6 +401,11 @@ private:
     int       fallSpeed;
     int       score;
     bool      running;
+
+    void tryMove(int dx, int dy)
+    {
+
+    }
 };
 
 // ====================== MAIN ======================

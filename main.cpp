@@ -678,6 +678,21 @@ private:
         board.place(current, x, y);
     }
 
+    void autoFall()
+    {
+        board.clear(current, x, y);
+        if (board.canFit(current, x, y + 1))
+        {
+            y++;
+            board.place(current, x, y);
+        }
+        else
+        {
+            board.place(current, x, y);
+            lockPiece();
+        }
+    }
+
     void lockPiece()
     {
         int lines = board.removeLines();

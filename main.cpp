@@ -398,7 +398,14 @@ class Board
 {
 public:
     char grid[H][W];
+    void init()
+    {
+        for (int i = 0; i < H; i++)
+            for (int j = 0; j < W; j++)
+                grid[i][j] = (i == 0 || i == H - 1 || j == 0 || j == W - 1) ? '#' : ' ';
+    }
 };
+
 
 // ====================== MAIN ======================
 

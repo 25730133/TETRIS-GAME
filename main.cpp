@@ -547,6 +547,17 @@ public:
         }
         setColor(7);
     }
+    // Vẽ toàn bộ board
+    void drawBoard(const Board& board) const
+    {
+        moveCursor(0, 0);
+        for (int i = 0; i < H; i++)
+        {
+            for (int j = 0; j < W; j++)
+                drawCell(board.grid[i][j]);
+            cout << '\n';
+        }
+    }
 };
 // ====================== MAIN ======================
 

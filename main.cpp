@@ -5,8 +5,10 @@
 
 using namespace std;
 
-#define H 20
-#define W 15
+const int H              = 20;
+const int W              = 15;
+const int MIN_FALL_SPEED = 100;
+const int SPEED_UP_STEP  = 10;
 
 char board[H][W];
 
@@ -616,6 +618,133 @@ public:
         setColor(12);
         cout << "GAME OVER" << endl;
         setColor(7);
+    }
+};
+
+
+class Game
+{
+public:
+    Game() : x(5), y(1), fallSpeed(500), score(0), running(true)
+    {
+        srand((unsigned)time(nullptr));
+        board.init();
+        nextType = rand() % 7;
+        spawnPiece();
+    }
+    
+    void run()
+    {
+        DWORD lastFall = GetTickCount();
+
+        while (running)
+        {
+            handleInput();
+
+            if (GetTickCount() - lastFall >= (DWORD)fallSpeed)
+            {
+                lastFall = GetTickCount();
+                autoFall();
+            }
+
+            renderer.drawAll(board, next, score);
+        }
+
+        renderer.drawAll(board, next, score);
+        renderer.drawGameOver();
+    }
+
+private:
+    Board     board;
+    Tetromino current;
+    Tetromino next;
+    Renderer  renderer;
+    int       x, y;
+    int       nextType;
+    int       fallSpeed;
+    int       score;
+    bool      running;
+
+    void spawnPiece()
+    {
+        current  = Tetromino(nextType);
+        nextType = rand() % 7;
+        next     = Tetromino(nextType);
+        x = 5;
+        y = 1;
+
+        if (!board.canFit(current, x, y))
+        {
+            running = false;
+            return;
+        }
+
+        board.place(current, x, y);
+    }
+
+    void handleInput()
+    {
+        if (!kbhit()) return;
+
+        char c = getch();
+        switch (c)
+        {
+            case 'a': case 'A': tryMove(-1, 0); break;
+            case 'd': case 'D': tryMove(1,  0); break;
+            case 'x': case 'X': tryMove(0,  1); break;
+            case 'w': case 'W': tryRotate();    break;
+            case 'q': case 'Q': running = false; break;
+        }
+    }
+
+    void tryMove(int dx, int dy)
+    {
+        board.clear(current, x, y);
+        if (board.canFit(current, x + dx, y + dy))
+        {
+            x += dx;
+            y += dy;
+        }
+        board.place(current, x, y);
+    }
+
+    void tryRotate()
+    {
+        Tetromino rotated = current.rotated();
+        board.clear(current, x, y);
+        if (board.canFit(rotated, x, y))
+            current = rotated;
+        board.place(current, x, y);
+    }
+
+    void autoFall()
+    {
+        board.clear(current, x, y);
+        if (board.canFit(current, x, y + 1))
+        {
+            y++;
+            board.place(current, x, y);
+        }
+        else
+        {
+            board.place(current, x, y);
+            lockPiece();
+        }
+    }
+
+    void lockPiece()
+    {
+        int lines = board.removeLines();
+        if (lines > 0)
+        {
+            score += lines * 100;
+            if (fallSpeed > MIN_FALL_SPEED)
+                fallSpeed -= lines * SPEED_UP_STEP;
+
+            renderer.drawAll(board, next, score);
+            Sleep(200);
+        }
+        spawnPiece();
     }
 };
 

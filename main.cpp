@@ -394,6 +394,11 @@ void removeLine()
         }
     }
 }
+class Tetromino
+{
+public:
+    char shape[4][4];
+};
 
 // ====================== MAIN ======================
 

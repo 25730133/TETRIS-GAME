@@ -422,6 +422,15 @@ public:
                 result.shape[j][3 - i] = shape[i][j];
         return result;
     }
+
+    char getLetter() const
+    {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                if (shape[i][j] != ' ')
+                    return shape[i][j];
+        return ' ';
+    }
 };
 
 // ====================== MAIN ======================

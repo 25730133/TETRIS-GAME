@@ -614,6 +614,12 @@ public:
 class Game
 {
 private:
+    Board     board;
+    Tetromino current;
+    Tetromino next;
+    Renderer  renderer;
+    int       x, y;
+    int       nextType;
     int       fallSpeed;
     int       score;
     bool      running;

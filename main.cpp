@@ -609,7 +609,16 @@ public:
         drawNextBlock(next);
         drawHUD(score);
     }
+
+    void drawGameOver() const
+    {
+        moveCursor(0, H + 1);
+        setColor(12);
+        cout << "GAME OVER" << endl;
+        setColor(7);
+    }
 };
+
 // ====================== MAIN ======================
 
 int main()

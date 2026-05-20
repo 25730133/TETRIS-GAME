@@ -632,6 +632,28 @@ public:
         nextType = rand() % 7;
         spawnPiece();
     }
+    
+    void run()
+    {
+        DWORD lastFall = GetTickCount();
+
+        while (running)
+        {
+            handleInput();
+
+            if (GetTickCount() - lastFall >= (DWORD)fallSpeed)
+            {
+                lastFall = GetTickCount();
+                autoFall();
+            }
+
+            renderer.drawAll(board, next, score);
+        }
+
+        renderer.drawAll(board, next, score);
+        renderer.drawGameOver();
+    }
+
 private:
     Board     board;
     Tetromino current;

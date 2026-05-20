@@ -615,6 +615,14 @@ public:
 
 class Game
 {
+public:
+    Game() : x(5), y(1), fallSpeed(500), score(0), running(true)
+    {
+        srand((unsigned)time(nullptr));
+        board.init();
+        nextType = rand() % 7;
+        spawnPiece();
+    }
 private:
     Board     board;
     Tetromino current;

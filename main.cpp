@@ -558,6 +558,38 @@ public:
             cout << '\n';
         }
     }
+     // Vẽ khối Tetromino tiếp theo (Next Block)
+    void drawNextBlock(const Tetromino& next) const
+    {
+        const int nx = 35, ny = 3;
+        setColor(15);
+
+        for (int i = 0; i < 10; i++)
+        {
+            moveCursor(nx, ny + i);
+            if (i == 0 || i == 9) cout << "############";
+            else                   cout << "#          #";
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            moveCursor(nx + 2, ny + 2 + i);
+            for (int j = 0; j < 4; j++)
+            {
+                char c = next.shape[i][j];
+                if (c == ' ')
+                {
+                    cout << "  ";
+                }
+                else
+                {
+                    setColor(getColor(c));
+                    cout << "[]";
+                    setColor(15);
+                }
+            }
+        }
+    }
 };
 // ====================== MAIN ======================
 

@@ -19,7 +19,8 @@ const int speedUpStep = 10;
 int fallSpeed = 500;
 
 // 7 tetrominoes
-char blocks[7][4][4] =
+char blocks[7][4][4] = {};
+const char BLOCK_SHAPES[7][4][4] = 
 {
     // I
     {
@@ -394,6 +395,45 @@ void removeLine()
         }
     }
 }
+
+class Tetromino
+{
+public:
+    char shape[4][4];
+  
+    Tetromino()
+    {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                shape[i][j] = ' ';
+    }
+  
+    explicit Tetromino(int type)
+    {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                shape[i][j] = BLOCK_SHAPES[type][i][j];
+    }
+   
+    Tetromino rotated() const
+    {
+        Tetromino result;
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                result.shape[j][3 - i] = shape[i][j];
+        return result;
+    }
+
+    char getLetter() const
+    {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                if (shape[i][j] != ' ')
+                    return shape[i][j];
+        return ' ';
+    }
+};
+
 class Board
 {
 public:
@@ -405,8 +445,6 @@ public:
                 grid[i][j] = (i == 0 || i == H - 1 || j == 0 || j == W - 1) ? '#' : ' ';
     }
 };
-
-
 // ====================== MAIN ======================
 
 int main()

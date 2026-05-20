@@ -624,6 +624,23 @@ private:
     int       score;
     bool      running;
 
+    void spawnPiece()
+    {
+        current  = Tetromino(nextType);
+        nextType = rand() % 7;
+        next     = Tetromino(nextType);
+        x = 5;
+        y = 1;
+
+        if (!board.canFit(current, x, y))
+        {
+            running = false;
+            return;
+        }
+
+        board.place(current, x, y);
+    }
+
     void handleInput()
     {
         if (!kbhit()) return;

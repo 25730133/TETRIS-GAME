@@ -395,6 +395,11 @@ void removeLine()
     }
 }
 
+class Game
+{
+
+};
+
 // ====================== MAIN ======================
 
 int main()

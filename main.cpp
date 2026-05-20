@@ -394,6 +394,11 @@ void removeLine()
         }
     }
 }
+class Board
+{
+public:
+    char grid[H][W];
+};
 
 // ====================== MAIN ======================
 

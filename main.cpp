@@ -602,6 +602,13 @@ public:
         moveCursor(35, 19); cout << "Q : QUIT  ";
         setColor(7);
     }
+     // Vẽ toàn bộ giao diện game
+    void drawAll(const Board& board, const Tetromino& next, int score) const
+    {
+        drawBoard(board);
+        drawNextBlock(next);
+        drawHUD(score);
+    }
 };
 // ====================== MAIN ======================
 

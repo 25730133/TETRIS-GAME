@@ -19,7 +19,8 @@ const int speedUpStep = 10;
 int fallSpeed = 500;
 
 // 7 tetrominoes
-char blocks[7][4][4] =
+char blocks[7][4][4] = {};
+const char BLOCK_SHAPES[7][4][4] =
 {
     // I
     {
@@ -394,6 +395,108 @@ void removeLine()
         }
     }
 }
+
+class Tetromino
+{
+public:
+    char shape[4][4];
+
+    Tetromino()
+    {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                shape[i][j] = ' ';
+    }
+
+    explicit Tetromino(int type)
+    {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                shape[i][j] = BLOCK_SHAPES[type][i][j];
+    }
+
+    Tetromino rotated() const
+    {
+        Tetromino result;
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                result.shape[j][3 - i] = shape[i][j];
+        return result;
+    }
+
+    char getLetter() const
+    {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                if (shape[i][j] != ' ')
+                    return shape[i][j];
+        return ' ';
+    }
+};
+
+class Board
+{
+public:
+    char grid[H][W];
+    void init()
+    {
+        for (int i = 0; i < H; i++)
+            for (int j = 0; j < W; j++)
+                grid[i][j] = (i == 0 || i == H - 1 || j == 0 || j == W - 1) ? '#' : ' ';
+    }
+    void place(const Tetromino& t, int x, int y)
+    {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                if (t.shape[i][j] != ' ')
+                    grid[y + i][x + j] = t.shape[i][j];
+    }
+    bool canFit(const Tetromino& t, int x, int y) const
+    {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                if (t.shape[i][j] != ' ')
+                {
+                    int nx = x + j, ny = y + i;
+                    if (nx < 1 || nx >= W - 1 || ny < 1 || ny >= H - 1)
+                        return false;
+                    if (grid[ny][nx] != ' ')
+                        return false;
+                }
+        return true;
+    }
+    int removeLines()
+    {
+        int cleared = 0;
+        for (int i = H - 2; i > 0; i--)
+        {
+            bool full = true;
+            for (int j = 1; j < W - 1; j++)
+                if (grid[i][j] == ' ') { full = false; break; }
+
+            if (full)
+            {
+                for (int ii = i; ii > 1; ii--)
+                    for (int jj = 1; jj < W - 1; jj++)
+                        grid[ii][jj] = grid[ii - 1][jj];
+
+                for (int jj = 1; jj < W - 1; jj++)
+                    grid[1][jj] = ' ';
+
+                cleared++;
+                i++; // re-check this row
+            }
+        }
+        return cleared;
+    }
+    void clear(const Tetromino& t, int x, int y)
+    {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                if (t.shape[i][j] != ' ')
+                    grid[y + i][x + j] = ' ';
+    }
+};
 // ====================== CLASS RENDERER ======================
 
 class Renderer

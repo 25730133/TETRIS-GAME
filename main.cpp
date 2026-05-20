@@ -590,6 +590,18 @@ public:
             }
         }
     }
+      // Hiển thị điểm số và hướng dẫn điều khiển
+    void drawHUD(int score) const
+    {
+        setColor(15);
+        moveCursor(35, 13); cout << "SCORE: " << score << "      ";
+        moveCursor(35, 15); cout << "A : LEFT  ";
+        moveCursor(35, 16); cout << "D : RIGHT ";
+        moveCursor(35, 17); cout << "X : DOWN  ";
+        moveCursor(35, 18); cout << "W : ROTATE";
+        moveCursor(35, 19); cout << "Q : QUIT  ";
+        setColor(7);
+    }
 };
 // ====================== MAIN ======================
 

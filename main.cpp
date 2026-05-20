@@ -489,6 +489,13 @@ public:
         }
         return cleared;
     }
+    void clear(const Tetromino& t, int x, int y)
+    {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                if (t.shape[i][j] != ' ')
+                    grid[y + i][x + j] = ' ';
+    }
 };
 // ====================== MAIN ======================
 

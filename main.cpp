@@ -425,6 +425,25 @@ public:
             default:  return 7;
         }
     }
+    // Vẽ một ô của board
+    static void drawCell(char c)
+    {
+        if (c == '#')
+        {
+            setColor(8);
+            cout << "##";
+        }
+        else if (c == ' ')
+        {
+            cout << "  ";
+        }
+        else
+        {
+            setColor(getColor(c));
+            cout << "[]";
+        }
+        setColor(7);
+    }
 };
 // ====================== MAIN ======================
 

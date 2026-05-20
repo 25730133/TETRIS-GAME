@@ -669,7 +669,11 @@ private:
 
     void tryRotate()
     {
-
+        Tetromino rotated = current.rotated();
+        board.clear(current, x, y);
+        if (board.canFit(rotated, x, y))
+            current = rotated;
+        board.place(current, x, y);
     }
 };
 
